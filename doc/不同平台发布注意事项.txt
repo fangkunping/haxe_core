@@ -1,0 +1,6 @@
+core.Common.time_stamp()
+    当发布到cpp或neko时，获得的只是 秒*1000 的时间戳
+    所以cpp要修改成为符合c++对应的原生程序
+    neko就没有办法了，先天不足
+
+

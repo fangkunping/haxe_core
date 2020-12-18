@@ -1,0 +1,46 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+
+
+class TelegramData {
+	+ start_run_time:Float
+	+ telegram:Dynamic
+
+	+ new(_telegram:Dynamic, _delay_time:Int)
+}
+
+class MessageDispatcher{
+    + events:Map<String, Array<EventData>>
+	+ telegrams:Map<String, Array<TelegramData>>
+	+ event_uuid:Int
+
+    + register(_event_name:String, _call_fn:Dynamic->Void, _call_amount:Int = 0):Int
+    + unregister(_event_name:String, _uuid:Int)
+    + send(_event_name:String, _telegram:Dynamic, _delay_time:Int = 0)
+    + update()
+    - broadcast(_event_name:String, _telegram:Dynamic)
+    - broadcast_and_fliter(_event_name:String, _telegram:Dynamic)
+    - get_event_datas(_event_name:String):Array<EventData> 
+}
+
+enum EventDataType{
+    Loop
+    Count
+}
+
+class EventData{
+   	+ uuid:Int = 0;
+	+ callback_fn:Dynamic->Void;
+	+ call_amount:Int = 0;
+	+ type:EventDataType; 
+
+    + new(_uuid:Int, _callback_fn:Dynamic->Void, _call_amount:Int)
+    + call_amount_down()
+    + can_remove()
+}
+
+EventData "1" o.. "1" EventDataType
+MessageDispatcher "1" o.. "0..n" EventData
+MessageDispatcher "1" o.. "0..n" TelegramData
+
+@enduml

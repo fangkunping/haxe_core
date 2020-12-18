@@ -1,0 +1,74 @@
+@startuml
+skinparam backgroundColor #EEEBDC
+
+control C
+
+
+C -> MessageDispatcher : new
+activate MessageDispatcher
+C <-- MessageDispatcher
+deactivate MessageDispatcher
+
+...
+
+C -> callback_fn
+activate callback_fn
+C <-- callback_fn:<fn>
+deactivate callback_fn
+
+C->MessageDispatcher:register(event_name, <fn>)
+activate MessageDispatcher
+MessageDispatcher -> EventData:new
+MessageDispatcher <-- EventData
+MessageDispatcher -> MessageDispatcher:加入事件队列
+C <-- MessageDispatcher: 事件对应的uuid
+deactivate MessageDispatcher
+
+...
+
+C -> MessageDispatcher:unregister(event_name, uuid)
+activate MessageDispatcher
+MessageDispatcher -> MessageDispatcher:根据从队列删除
+C <-- MessageDispatcher
+deactivate MessageDispatcher
+
+...
+
+C -> MessageDispatcher:send(event_name, data) [立即发送]
+activate MessageDispatcher
+MessageDispatcher -> MessageDispatcher
+activate MessageDispatcher
+MessageDispatcher -> callback_fn : 回调 <fn>
+activate callback_fn
+MessageDispatcher <-- callback_fn
+destroy callback_fn
+deactivate callback_fn
+deactivate MessageDispatcher
+C <-- MessageDispatcher
+deactivate MessageDispatcher
+
+...
+
+C -> MessageDispatcher:send(event_name, data) [延迟发送]
+activate MessageDispatcher
+MessageDispatcher -> TelegramData:new
+MessageDispatcher <-- TelegramData
+MessageDispatcher -> MessageDispatcher:加入telegram 队列
+C <-- MessageDispatcher
+deactivate MessageDispatcher
+
+
+...
+C -> MessageDispatcher:update()
+activate MessageDispatcher
+MessageDispatcher -> MessageDispatcher: 遍历 telegram 队列
+activate MessageDispatcher
+MessageDispatcher -> callback_fn: 回调 <fn>
+activate callback_fn
+MessageDispatcher <-- callback_fn
+destroy callback_fn
+deactivate callback_fn
+deactivate MessageDispatcher
+deactivate MessageDispatcher
+
+@enduml
