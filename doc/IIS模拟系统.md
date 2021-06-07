@@ -28,6 +28,8 @@ IIS.start(
 
 2020-02-26：增加了`请求类型`缺省参数 `IIS_REQUEST_TYPE.NONE` 即 使用IIS的配置requestType ，详见 IIS.request 函数说明
 
+`IIS_REQUEST_TYPE.NONE` 是为了在使用request函数时，不需要输入请求类型参数。
+
 ```haxe
 IIS.request("tdd/test", {name: "Max", age: 40}, (v:String) -> {
     new Assert().equip("Hello, My name is Max, I am 40 years old", v);

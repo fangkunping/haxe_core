@@ -11,8 +11,12 @@ class HawkRandTools {
 
 	private static var State:Int = -1;
 
-	public static function setRandSeed(seed:Int){
+	public static function setRandSeed(seed:Int) {
 		State = seed;
+	}
+
+	public static function clearRandSeed() {
+		State = -1;
 	}
 
 	public static function randInt():Int {
@@ -127,9 +131,9 @@ class HawkRandTools {
 		}
 	}
 
-  /**
-    将一个数切成 part 片， 最小 值为 minVal
-  **/
+	/**
+		将一个数切成 part 片， 最小 值为 minVal
+	**/
 	public static function randomIncision(totalCount:Int, part:Int, minVal:Int):Array<Int> {
 		var partCount = new Array<Int>();
 		for (i in 0...part) {

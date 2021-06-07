@@ -45,16 +45,12 @@ class IIS {
 	}
 
 	/**
-		## 调用API
-
-		* api：api地址
-
-		* data：传输的数据
-
-		* callback_fn：回调函数
-
-		* request_type：请求类型，IIS_REQUEST_TYPE.[CALLBACK | EVENT], 缺省为 IIS_REQUEST_TYPE.NONE, 即使用IIS的配置项
-	**/
+	 * 调用API
+	 * @param api api地址
+	 * @param data 传输的数据
+	 * @param callback_fn 回调函数
+	 * @param request_type 请求类型，IIS_REQUEST_TYPE.[CALLBACK | EVENT], 缺省为 IIS_REQUEST_TYPE.NONE, 即使用IIS的配置项
+	 */
 	static public function request(api:String, data:Dynamic, callback_fn:Dynamic->Void, request_type:IIS_REQUEST_TYPE = IIS_REQUEST_TYPE.NONE) {
 		inc.do_request(api, data, callback_fn, request_type);
 	}
