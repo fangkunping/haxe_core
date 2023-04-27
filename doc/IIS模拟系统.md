@@ -12,7 +12,10 @@ IIS模拟系统是模拟API调用的一个微服务，其自身封装了 `信息
 
 ### 初始化，定义路由
 
-`注意`：需要在import 控制器类，否则haxe不会编译所有的类到最终项目里面
+`注意`：haxe不会编译所有的类到最终项目里面，有两种解决方法
+1. import 控制器类
+2. 在编译文件hxml 里面 添加 --macro include('tdd.controller.TestController')
+
 
 ```haxe
 import tdd.controller.TestController;
@@ -41,7 +44,9 @@ IIS.request("tdd/test", {name: "Max", age: 40}, (v:String) -> {
 2020-02-26：
 
 * 当请求类型为 `IIS_REQUEST_TYPE.CALLBACK` 时，所有信息都是立即返回到调用者
-* 当请求类型为 `IIS_REQUEST_TYPE.EVENT` 时, 调用立即执行并将结果储存起来，必须使用update方法返回结果（延迟1毫秒），update的使用方式和`信息分发`(MessageDispatcher) 使用方式一致。
+
+2020-12-10
+* 当请求类型为 `IIS_REQUEST_TYPE.EVENT` 时, 不会立即执行，必须使用update方法触发执行（延迟0.0001毫秒），update的使用方式和`信息分发`(MessageDispatcher) 使用方式一致。
 
 ```haxe
 IIS.update();

@@ -37,12 +37,13 @@ enum IIS_REQUEST_TYPE {
 	CALLBACK;
 }
 
-class IIS {
-	static private var inc:IIS;
+class IIS<TIn, TOut> {
+	static public var inc:IIS<Dynamic, Dynamic>;
 
 	static public function start(setting:Setting) {
 		inc = new IIS(setting);
 	}
+
 
 	/**
 	 * 调用API
@@ -59,9 +60,13 @@ class IIS {
 		inc.updateEvent();
 	}
 
-	private var messageDispatcher:MessageDispatcher;
+	static public function getMessageDispathcer() {
+		return inc.messageDispatcher;
+	}
 
-	private var router:Router;
+	public var messageDispatcher:MessageDispatcher<TOut>;
+
+	private var router:Router<TIn, TOut>;
 
 	private var requestType:IIS_REQUEST_TYPE;
 
@@ -76,7 +81,7 @@ class IIS {
 		messageDispatcher.update();
 	}
 
-	public function do_request(api:String, data:Dynamic, callback_fn:Dynamic->Void, request_type) {
+	public function do_request(api:String, data:TIn, callback_fn:TOut->Void, request_type) {
 		switch (request_type) {
 			case IIS_REQUEST_TYPE.NONE:
 				do_request(api, data, callback_fn, this.requestType);
@@ -87,15 +92,24 @@ class IIS {
 		}
 	}
 
-	public function requestEvent(api:String, data:Dynamic, callback_fn:Dynamic->Void) {
+	/* 旧实现函数，仅供参考
+		public function requestEvent(api:String, data:Dynamic, callback_fn:Dynamic->Void) {
+			final event_name:String = '${api}_${Math.random()}';
+			messageDispatcher.register(event_name, (t) -> {
+				callback_fn(t);
+			}, 1);
+			router.post(api, data, event_name);
+		}
+	 */
+	public function requestEvent(api:String, data:TIn, callback_fn:TOut->Void) {
 		final event_name:String = '${api}_${Math.random()}';
-		messageDispatcher.register(event_name, (t) -> {
-			callback_fn(t);
+		messageDispatcher.register(event_name, _ -> {
+			requestCallBack(api, data, callback_fn);
 		}, 1);
-		router.post(api, data, event_name);
+		messageDispatcher.send(event_name, null, 0.0001);
 	}
 
-	public function requestCallBack(api:String, data:Dynamic, callback_fn:Dynamic->Void) {
+	public function requestCallBack(api:String, data:TIn, callback_fn:TOut->Void) {
 		router.postCallBack(api, data, callback_fn);
 	}
 }

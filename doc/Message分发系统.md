@@ -43,3 +43,7 @@ md.send("on_test", "hello world", 1);
 ```haxe
 md.unregister("on_test", uuid);
 ```
+
+### 清理
+设置 maxClearMount 的值（缺省 50）
+每执行一次 update 累计一次数量，当数量到达 maxClearMount 就进行清理操作

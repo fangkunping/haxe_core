@@ -8,12 +8,12 @@ import haxe.rtti.Meta;
 
 typedef RouterData = {class_name:String, method:String}
 
-class Router {
+class Router<TIn, TOut> {
 	private var routerClass:Array<String>;
 	private var routerData:Map<String, RouterData>;
-	private var messageDispatcher:MessageDispatcher;
+	private var messageDispatcher:MessageDispatcher<TOut>;
 
-	public function new(_msgDispatcher:MessageDispatcher) {
+	public function new(_msgDispatcher:MessageDispatcher<TOut>) {
 		messageDispatcher = _msgDispatcher;
 	}
 
@@ -46,19 +46,19 @@ class Router {
 		* api: api路径地址
 		* event_name: 事件名称, 用于接收返回数据
 	**/
-	public function post(api:String, data:Dynamic, event_name:String = null) {
+	public function post(api:String, data:TIn, event_name:String = null) {
 		var classInfo = routerData[api];
 		// 实例化类
 		var theClass = Type.resolveClass(classInfo.class_name);
 		var instance = Type.createInstance(theClass, []);
 		// 调用函数
-		final response = (d:Dynamic) -> {
+		final response = (d:TOut) -> {
 			messageDispatcher.send(event_name, d, 1);
 		};
 		Reflect.callMethod(instance, Reflect.field(instance, classInfo.method), [data, response]);
 	}
 
-	public function postCallBack(api:String, data:Dynamic, callback_fn:Dynamic->Void){
+	public function postCallBack(api:String, data:TIn, callback_fn:TOut->Void){
 		var classInfo = routerData[api];
 		// 实例化类
 		var theClass = Type.resolveClass(classInfo.class_name);
