@@ -74,4 +74,12 @@ class Common {
 			return str.substr(0, str.length - prec) + '.' + str.substr(str.length - prec);
 		}
 	}
+
+	public static function concatDynamic(fromObj:Dynamic, toObj:Dynamic, isReplace:Bool = true) {
+		for (key in Reflect.fields(fromObj)) {
+			if (isReplace == false && Reflect.hasField(toObj, key))
+				continue;
+			Reflect.setField(toObj, key, Reflect.field(fromObj, key));
+		}
+	}
 }

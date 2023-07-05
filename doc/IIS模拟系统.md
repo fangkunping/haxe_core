@@ -23,7 +23,7 @@ import tdd.controller.TestController;
 IIS.start(
 	new Setting()
 	.setRouterClass(["tdd.controller.TestController"])
-	.setRequestType(IIS_REQUEST_TYPE.CALLBACK) //可以不用配置， 缺省为 IIS_REQUEST_TYPE.CALLBACK
+	.setRequestType(IIS_REQUEST_TYPE.CALLBACK) //可以不用配置， 缺省为 IIS_REQUEST_TYPE.NONE
 );
 ```
 

@@ -52,7 +52,7 @@ class IIS<TIn, TOut> {
 	 * @param callback_fn 回调函数
 	 * @param request_type 请求类型，IIS_REQUEST_TYPE.[CALLBACK | EVENT], 缺省为 IIS_REQUEST_TYPE.NONE, 即使用IIS的配置项
 	 */
-	static public function request(api:String, data:Dynamic, callback_fn:Dynamic->Void, request_type:IIS_REQUEST_TYPE = IIS_REQUEST_TYPE.NONE) {
+	static public function request<TIn, TOut>(api:String, data:TIn, callback_fn:TOut->Void, request_type:IIS_REQUEST_TYPE = IIS_REQUEST_TYPE.NONE) {
 		inc.do_request(api, data, callback_fn, request_type);
 	}
 
